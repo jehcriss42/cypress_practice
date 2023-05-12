@@ -1,20 +1,28 @@
 
 describe('Testing google elements', () => {
-  before
+  beforeEach(() => {
+    cy.visit('https://www.google.com/search?q=1')
+  })
+
   it('Google logo can be located and is visible', () => {
-    cy.visit('https://www.google.com/search?q=1');
     cy.get(".logo a").should("be.visible");
   })
 
   it('Google search text area can be located and is visible', () => {
-    cy.visit('https://www.google.com/search?q=1');
     cy.get("textarea").should("be.visible");
   })
 
-  it('Add a query in the search and check the result', () => {
-    cy.visit('https://www.google.com/search?q=1');
-    cy.get("textarea").clear();
-    cy.get("textarea").type("testing")
+  it('Add a query in the text search area and verify the result', () => {
+    cy.get("textarea")
+      .clear()
+      .type("testing");
+
     cy.get('button[type="submit"]').click();
+
+    cy.get("textarea")
+      .get('[role="combobox"]')
+      .should('have.text', 'testing');
+
+    cy.get('#result-stats').should('not.be.empty');
   })
 })
